@@ -191,6 +191,11 @@ def save_credentials(creds: dict) -> None:
     """Write credentials.json with the given dict."""
     with open(CONFIG_PATH, "w") as f:
         json.dump(creds, f, indent=2)
+    if platform.system() == "Darwin":
+        try:
+            os.chmod(CONFIG_PATH, 0o600)
+        except OSError:
+            pass
 
 
 def load_credentials() -> dict:

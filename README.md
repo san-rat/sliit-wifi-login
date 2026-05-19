@@ -16,7 +16,23 @@ git clone https://github.com/notdulain/sliit-wifi-login.git
 cd sliit-wifi-login
 ```
 
-### 2. Install
+### 2. Create `credentials.json`
+
+The setup scripts expect `credentials.json` to exist before installation:
+
+```sh
+cp credentials.example.json credentials.json
+# then edit credentials.json with your SLIIT username and password
+```
+
+On Windows, edit it with Notepad:
+
+```powershell
+copy credentials.example.json credentials.json
+notepad credentials.json
+```
+
+### 3. Install
 
 **macOS:**
 
@@ -33,9 +49,9 @@ chmod +x setup-mac.sh
 
 That's it. The script will now run automatically whenever you connect to SLIIT WiFi.
 
-### 3. First-Time Setup (GUI)
+### Optional First-Time Setup (GUI)
 
-The first time the script runs, a small setup window will appear asking for your SLIIT credentials:
+If you run `sliit-login.py` manually without a `credentials.json` file, a small setup window will appear asking for your SLIIT credentials:
 
 ```
 ┌─────────────────────────────────────┐
@@ -49,13 +65,7 @@ The first time the script runs, a small setup window will appear asking for your
 └─────────────────────────────────────┘
 ```
 
-Fill in your username and password, click **Save & Connect**, and the script saves `credentials.json` and immediately logs you in. No manual file editing required.
-
-> You can also skip the GUI by creating `credentials.json` manually before running:
-> ```sh
-> cp credentials.example.json credentials.json
-> # then edit credentials.json with your details
-> ```
+Fill in your username and password, click **Save & Connect**, and the script saves `credentials.json` and immediately logs you in. For automatic startup installation, create `credentials.json` before running the setup script.
 
 ## Changing Your Password
 
@@ -167,4 +177,4 @@ Then delete the folder.
 
 ## Security Note
 
-`credentials.json` and `login_attempts.json` are gitignored and never committed. The setup scripts set file permissions to owner-only (600) on macOS. On Windows, they live in your user directory with your account's default permissions.
+`credentials.json` and `login_attempts.json` are gitignored and never committed. On macOS, the setup script and the Python credential dialogs set `credentials.json` to owner-only permissions (`600`). On Windows, they live in your user directory with your account's default permissions.
