@@ -16,22 +16,7 @@ git clone https://github.com/notdulain/sliit-wifi-login.git
 cd sliit-wifi-login
 ```
 
-### 2. Add your credentials
-
-```sh
-cp credentials.example.json credentials.json
-```
-
-Edit `credentials.json` with your SLIIT username and password:
-
-```json
-{
-  "username": "itXXXXXXXX",
-  "password": "your-password-here"
-}
-```
-
-### 3. Install
+### 2. Install
 
 **macOS:**
 
@@ -48,9 +33,33 @@ chmod +x setup-mac.sh
 
 That's it. The script will now run automatically whenever you connect to SLIIT WiFi.
 
+### 3. First-Time Setup (GUI)
+
+The first time the script runs, a small setup window will appear asking for your SLIIT credentials:
+
+```
+┌─────────────────────────────────────┐
+│  SLIIT WiFi Setup                   │
+│  Enter your SLIIT portal credentials│
+│                                     │
+│  Username  [ it23xxxxxx           ] │
+│  Password  [ ••••••••••    Show   ] │
+│                                     │
+│         [ Save & Connect ]          │
+└─────────────────────────────────────┘
+```
+
+Fill in your username and password, click **Save & Connect**, and the script saves `credentials.json` and immediately logs you in. No manual file editing required.
+
+> You can also skip the GUI by creating `credentials.json` manually before running:
+> ```sh
+> cp credentials.example.json credentials.json
+> # then edit credentials.json with your details
+> ```
+
 ## Changing Your Password
 
-Edit `credentials.json` — no restart or reinstall needed. The script reads the file fresh every time it runs.
+### Option A — Edit the file directly
 
 ```sh
 # macOS / Linux
@@ -59,6 +68,30 @@ nano credentials.json
 # Windows
 notepad credentials.json
 ```
+
+No restart or reinstall needed. The script reads the file fresh every time it runs.
+
+### Option B — Automatic prompt (recommended)
+
+If your password has changed and the script fails to log in **3 times within 30 seconds**, a credential update window appears automatically:
+
+```
+┌──────────────────────────────────────────┐
+│  Login Failed 3 Times                    │
+│  Update your username and/or password.   │
+│                                          │
+│  Username  [ it23xxxxxx              ]   │
+│  New Pass  [ ••••••••••••••   Show   ]   │
+│                                          │
+│  [ Cancel ]          [ Update & Retry ]  │
+└──────────────────────────────────────────┘
+```
+
+- The **Username** field is pre-filled but editable (in case your student ID also changed)
+- Click **Update & Retry** — credentials are saved and a login attempt is made immediately
+- Click **Cancel** to dismiss without saving
+
+> **How the 3-failure detection works:** Each failed login records a timestamp in a local `login_attempts.json` file. If 3 or more failures occur within 30 seconds the prompt appears. The counter resets automatically on a successful login.
 
 ## Manual Run
 
@@ -93,6 +126,7 @@ Successful output looks like:
 3. Fetches the portal page and extracts the session token (`magic`)
 4. POSTs your credentials to the FortiGate authentication endpoint
 5. Verifies login by re-probing
+6. If login fails 3 times within 30 seconds, prompts for updated credentials and retries immediately
 
 The script exits silently when you're not on SLIIT WiFi — safe to leave running anywhere.
 
@@ -133,4 +167,4 @@ Then delete the folder.
 
 ## Security Note
 
-`credentials.json` is gitignored and never committed. The setup scripts set file permissions to owner-only (600) on macOS. On Windows, it lives in your user directory with your account's default permissions.
+`credentials.json` and `login_attempts.json` are gitignored and never committed. The setup scripts set file permissions to owner-only (600) on macOS. On Windows, they live in your user directory with your account's default permissions.

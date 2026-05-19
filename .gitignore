@@ -1,3 +1,4 @@
 credentials.json
+login_attempts.json
 *.log
 __pycache__/
